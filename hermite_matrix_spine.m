@@ -1,5 +1,4 @@
-
-function [C_ij] = hermite_matrix(f_x, s_a, s_b, t_a, t_b, du, dv)
+function [C_ij] = hermite_matrix_spine(f_x,s_a,s_b,t_a,t_b,du,dv)
     syms t s
     C_ij = zeros(4, 4);
     

@@ -1,4 +1,3 @@
-
 function [c] = deCasteljau(P, n, u)
     Q = P;
     for k = 2:n + 1

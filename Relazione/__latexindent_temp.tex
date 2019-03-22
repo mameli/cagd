@@ -15,7 +15,6 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage[shortlabels]{enumitem}
-\usepackage[titletoc,toc,title,page]{appendix}
 
 \usepackage{mathpazo} 
 \definecolor{codeblue}{rgb}{0.21, 0.46, 0.80}
@@ -55,33 +54,61 @@
 \renewcommand{\lstlistingname}{Codice}
 \newcommand{\MATLAB}{\textsc{Matlab }}
 
-\addto\captionsitalian{%
-  \renewcommand\appendixname{}
-  \renewcommand\appendixpagename{Appendice codici}
-}
+\newcommand{\myItalianTitle}{Interpolazione di superfici alla Hermite}
+\newcommand{\myDegree}{Corso di Laurea in Informatica\xspace}
+
+\newcommand{\myName}{Filippo Mameli\xspace}
+\newcommand{\myFaculty}{Scuola di Scienze Matematiche, Fisiche e Naturali\xspace}
+\newcommand{\myUni}{\protect{Universit\`a degli Studi di Firenze}\xspace}
+\newcommand{\myLocation}{Firenze\xspace}
+\newcommand{\myTime}{Anno Accademico 2018-2019\xspace}
+\newcommand{\myVersion}{Version 0.1\xspace}
 
 \begin{document}
 \begin{titlepage}
 	\begin{center}
-	\includegraphics[scale=0.3]{img/LOGO.pdf}\\
-	\vfill
-	\Large Relazione di Metodi numerici per la grafica: \\
-	\vspace{0.5cm}
-	\Huge Interpolazione di superfici alla Hermite  \\ 
-	\vfill
-	\large
-	Di\\
-	\vspace{0.5cm}
-	Filippo Mameli \\
-	\vfill
-	Anno Accademico 2018-2019
+   	\large
+      \hfill
+      \vfill
+      \begingroup
+         \includegraphics[scale=0.3]{img/LOGO.pdf}\\
+%			\spacedallcaps{\myUni} \\
+			\myFaculty \\
+			\myDegree \\
+			\vspace{0.5cm}
+      \endgroup
+      \vfill
+      \begingroup
+		  \myItalianTitle \\ 
+	\bigskip
+      \endgroup
+      \myName
+      \vfill
+      \vfill
+      Relatore: \emph{Rosario Pugliese}\\
+      Correlatore: \emph{Andrea Margheri}\\
+      \vfill
+      \vfill
+      \myTime
+      \vfill
 	\end{center}
 \end{titlepage}
+%--------------------------------------------------------------
+% back titlepage
+%--------------------------------------------------------------
+   \newpage
+	\thispagestyle{empty}
+	\hfill
+	\vfill
+	\noindent\myName:
+	\textit{\myItalianTitle,}
+	\myDegree, \textcopyright\ \myTime
+
 
 \section{Patch bicubico interpolante alla Hermite}
 
-L'interpolazione di Hermite a differenza dell'interpolazione di Lagrande si basa, non solo
-sull'utilizzo dei punti della funzione vettoriale, ma aggiunge come parametri in input
+L'interpolazione di Hermite a differenza dell'interpolazione di Lagrande si basa non solo
+sull'utilizzo dei punti della funzione vettoriale, ma aggiunge anche come parametri in input
 anche le derivate parziali e miste. Il patch bicubico nella forma di Hermite è dato da:
 
 $$ X(u,v) = \sum_{i=0}^{3}\sum_{j=0}^{3} h_{ij}H_3^3(u)H_3^3(v); \hspace{1em} 0 \geq u, v \geq 1;$$
@@ -97,30 +124,31 @@ $$\mathbf{C} =
     \mathbf{X}(1,0)     & \mathbf{X}_t(1,0)     & \mathbf{X}_t(1,1)     & \mathbf{X}(1,1) 
 \end{pmatrix}  $$
 La matrice può essere vista come 4 gruppi di matrici 2x2 contenenti le informazioni
-sugli angoli del patch.
+sui angoli del patch.
 
 \begin{figure}[H]
     \centering
 
     \includegraphics[scale=0.7]{img/der.png}
 
-    \caption{Rappresentazione dei punti e delle derivate}\label{fig:1}
+    \caption{Rappresentazione dei punti e dei vettori}\label{fig:1}
 \end{figure}
 
 \section{Implementazione in Matlab}
 Per testare il codice scegliamo come superficie il toroide in Figura~\ref{fig:1}.
 Da questo prendiamo una porzione più piccola per ricavare i dati da usare in input
-per l'interpolazione. La superficie del toro è stata disegnata eseguendo il Codice~\ref{toro}.
+per l'interpolazione.
 
 \begin{figure}[H]
     \centering
 
     \includegraphics[scale=0.7]{img/toro.eps}
 
-    \caption{Superficie di test}\label{fig:2}
+    \caption{Rappresentazione dei punti e dei vettori}\label{fig:2}
 \end{figure}
 
-\begin{lstlisting}[caption={Plot della superficie}, style=matlab, label={toro}, captionpos=b]
+La superficie del toro è stata disegnata eseguendo il Codice~\ref{toro}
+\begin{lstlisting}[caption={Plot del toro}, style=matlab, label={toro}, captionpos=b]
 s_a = 0; s_b = 7;
 s = linspace(s_a, s_b, 50);
 t_a = 0; t_b = 7;
@@ -166,7 +194,7 @@ plot3(cx_2, cy_2, cz_2, 'r.', 'MarkerSize', 30);
 plot3(cx_3, cy_3, cz_3, 'r.', 'MarkerSize', 30);
 plot3(cx_4, cy_4, cz_4, 'r.', 'MarkerSize', 30);
 \end{lstlisting}
-La matrice $\mathbf{C}$ è una matrice a tre piani, ciascuno 4x4. Per ricavare i valori delle 
+La matrice $\mathbf{C}$ è una matrice a tre piani ciascuno 4x4. Per ricavare i valori delle 
 derivate parziali e miste utilizziamo il \textit{Symbolic Math Toolbox} di \MATLAB.
 Definiamo le funzioni $f(x)$, $f(y)$ e $f(z)$ e i parametri $s$ e $t$. Nel Codice~\ref{derivate}
 si può vedere come utilizzando la funzione \textit{diff} si possa ricavare le derivate sui
@@ -222,14 +250,14 @@ C_x(4,3) = df_xt(s_b, t_b);
 C_x(3,4) = df_xs(s_b, t_b);
 C_x(3,3) = df_xst(s_b, t_b);
 \end{lstlisting}
-Iterando lo stesso procedimento per i piani $Y$ e $Z$ della matrice $\mathbf{C}$ possiamo passare al calcolo del patch
+Iterando lo stesso procedimento per i piani $Y$ e $Z$ della matrice $\mathbf{C}$ possiamo passare al calcolo della patch
 in forma di Hermite.
 Utilizzando il calcolo matriciale abbiamo:
 
 $$\mathbf{X}(s,t) = \mathbf{H}^T(s)\mathbf{\ C\ H}(t)$$\\
 dove $\mathbf{H}(t) = (H^3_0(t), H^3_1(t), H^3_2(t), H^3_3(t))$.\\
 Nel Codice~\ref{patchHermite} vediamo prima la definizione delle funzioni della base di
-Hermite per poi passare calcolo di $\mathbf{X}(s,t)$. In Figura~\ref{fig:4} viene mostrata la porzione
+Hermite per poi passare calcolo di $X(s,t)$. In Figura~\ref{fig:4} viene mostrata la porzione
 di superficie disegnata utilizzando il patch bicubico ricavato.
 \begin{lstlisting}[caption={Patch in forma di Hermite}, style=matlab, label={patchHermite}, captionpos=b]
 syms H_0_t(t) H_1_t(t) H_2_t(t) H_3_t(t) H_0_s(s) H_1_s(s) H_2_s(s) H_3_s(s)
@@ -257,7 +285,7 @@ Z_st = symfun((H_s.') * C(:,:,3) * H_t, [s,t]);
 
     \includegraphics[scale=0.7]{img/hermitePatch.eps}
 
-    \caption{Visualizzazione del patch interpolante in forma di Hermite}\label{fig:4}
+    \caption{Patch in forma di Hermite}\label{fig:4}
 \end{figure}
 
 
@@ -265,26 +293,25 @@ Z_st = symfun((H_s.') * C(:,:,3) * H_t, [s,t]);
 \label{sec:errori}
 In questo sezione analiziamo l'errore di interpolazione confrontando i valori esatti della superficie con i valori del patch interpolante. 
 I parametri $s_a$, $s_b$, $t_a$ e $t_b$ presi per eseguire
-i test appartengono al dominio parametrico $[0,\ 1]^2$, utilizzando questi valori 
-la norma 2, calcolata con il Codice~\ref{error},
+i test appartengono a $[0,1]^2$, utilizzando questi valori la norma 2 calcolata con il Codice~\ref{error}
 risulta:
 \begin{itemize}[-]
-	\item 0.0717 per le ascisse;
-	\item 0.0396 per le ordinate;
-	\item 0.0114 per la quota
+	\item per x: 0.0717;
+	\item per y: 0.0396;
+	\item per z: 0.0114
 \end{itemize}
-data l'ampiezza del dominio parametrico-$st$ i valori degli errori sono rilevanti come ci potevamo aspettare;
+data l'ampiezza del dominio parametrico-$st$ i valori degli errori sono quelli che ci potevamo aspettare,
 passando da $[0,1]^2$ a $[0,0.5]^2$ abbiamo invece dei valori di norma 2 pari a:
 \begin{itemize}[-]
-	\item 0.0053 per le ascisse;
-	\item 0.0014 per le ordinate;
-	\item 3.7101e-04 per la quota.
+	\item per x: 0.0016;
+	\item per y: 4.1487e-04;
+	\item per z: 1.1477e-04.
 \end{itemize}
 L'errore in questo caso diminuisce notevolmente.
 Questo ci fa capire che questa tecnica di interpolazione è molto più efficace prendendo domini
 parametrici piccoli. Nella Sessione~\ref{sec:erroriSpline} vedremo come la divisione in sottointervalli 
-sempre più piccoli porterà alla diminuzione e al quasi annullamento dell'errore.
-\begin{lstlisting}[caption={Calcolo della Norma 2}, style=matlab, label={error}, captionpos=b]
+sempre più piccoli porterà alla diminuzione e all'annullamento dell'errore.
+\begin{lstlisting}[caption={Norma 2}, style=matlab, label={error}, captionpos=b]
 norm(abs(X_hermite - X))
 norm(abs(Y_hermite - Y))
 norm(abs(Z_hermite - Z))
@@ -301,16 +328,16 @@ $$B^3_0(t) = (1 - t)^3, B^3_1(t) = 3t(1 - t)^2 B^3_2(t) = 3t^2(1 - t), B^3_3(t) 
 \noindent
 dove
 $$\mathbf{B}(t) = (B^3_0(t), B^3_1(t), B^3_2(t), B^3_3(t))$$
-e $\mathbf{M}$ è una matrice di dimensione 4x4 a tre piani.
+e $\mathbf{M}$ è una matrice a 4x4 a tre piani.
 
-Data la matrice di Hermite possiamo ad ogni elemento associare un corrispondente
-nella matrice nella forma di Bezier.
+Data la matrice di Hermite possiamo ad ogni elemento associare una posizione della matrice 
+nella forma di Bezier.
 Utilizziamo il Codice~\ref{bezier_matrix} per ricavare da un piano della matrice di Hermite
-il piano della matrice associato in forma di Bezier.
-\lstinputlisting[caption={Funzione per la creazione di un piano della matrice di Bezier}, style=matlab, label={bezier_matrix}, captionpos=b]{../bezier_matrix.m}
+il piano della matrice associato per forma di Bezier.
+\lstinputlisting[caption={Matrice di Bezier}, style=matlab, label={bezier_matrix}, captionpos=b]{../bezier_matrix.m}
 Riprodotto questo procedimento per tutti e tre i piani, come mostrato nel Codice~\ref{full_bezier}, possiamo
 passare alla definizione del patch in forma di Bezier.
-\lstinputlisting[caption={Creazione della matrice di Bezier completa}, style=matlab, label={full_bezier}, captionpos=b]{../full_bezier_matrix.m}
+\lstinputlisting[caption={Matrice di Bezier completa}, style=matlab, label={full_bezier}, captionpos=b]{../full_bezier_matrix.m}
 Nello stesso modo del patch di Hermite definiamo le funzioni di base per scrivere
 in forma matriciale il patch di Bezier. 
 Visualiziamo nel Codice~\ref{patchBezier} come sono state create le funzioni del patch.
@@ -334,10 +361,9 @@ YB_st = symfun((Ber_s.') * M(:,:,2) * Ber_t, [s,t]);
 ZB_st = symfun((Ber_s.') * M(:,:,3) * Ber_t, [s,t]);
 \end{lstlisting}
 Su questo nuovo patch possiamo fare un controllo di equivalenza con il patch in forma di Hermite.
-Eseguendo il Codice~\ref{controlloEqui} questo ci da un risultato affermativo e quindi
-a meno di una tolleranza infinitesimale e assumendo che lo spazio
+Nel Codice~\ref{controlloEqui} vediamo come a meno di una tolleranza e assumendo che lo spazio
 parametrico sia compreso tra i valori presi in considerazione, i due patch bicubici sono uguali.
-\begin{lstlisting}[caption={Controllo di equivalenza dei due patch}, style=matlab, label={controlloEqui}, captionpos=b]
+\begin{lstlisting}[caption={Controllo di equivalenza tra i due patch}, style=matlab, label={controlloEqui}, captionpos=b]
 assume(s_a <= s <= s_b)
 assume(t_a <= t <= t_b)
 isAlways(abs(X_st - XB_st) <  1.0e-13 )
@@ -361,9 +387,9 @@ Codice~\ref{deCasteljau2} che richiama il Codice~\ref{deCasteljau} di de Castelj
 \lstinputlisting[caption={Algoritmo di de Casteljau per la superficie}, style=matlab, label={deCasteljau2}, captionpos=b]{../deCasteljau2.m}
 \lstinputlisting[caption={Algoritmo di de Casteljau a un solo parametro}, style=matlab, label={deCasteljau}, captionpos=b]{../deCasteljau.m}
 
-\section{Generalizzazione al caso spline}
-Utilizziamo l'unione di tanti patch per definire una superficie.
-Ogni patch è definito in un sottorettangolo del dominio parametrico.
+\section{Generalizzazion al caso spline}
+Utilizziamo l'unione di tanti patch per definire la superficie.
+Ogni patch è definito un un sottorettangolo del dominio parametrico.
 Determiniamo la superficie $\mathbf{X} \ : \ A \rightarrow E^3$ tale che,
 $\forall i = 0, \dots , n$ e $\forall j = 0, \dots , m$ risulti
 $$\mathbf{X}(u_i, v_j) = \mathbf{P}_{i,j}, \ \mathbf{X}_u(u_i, v_j) = \mathbf{d}_{i,j}^{(1,0)} \  \mathbf{X}_v(u_i, v_j) = \mathbf{d}_{i,j}^{(0,1)} \  \mathbf{X}_{uv}(u_i, v_j) = \mathbf{d}_{i,j}^{(1,1)}.$$
@@ -371,9 +397,9 @@ Poniamo inoltre la divisione in patch,
 $$\mathbf{X}(u, v) = \mathbf{X}^{(i,j)}(u, v),\  \text{se}\  u \in [u_i, u_{i+1}],\ \text{e} \ v \in [v_j, v_{j+1}].$$
 Posto
 $$ s = \frac{u-u_i}{\Delta u_i}, t = \frac{v - v_j}{\Delta v_j} \hspace{2em} (\text{parametri locali})$$
-con $\Delta u_i = u_{i+1} - u_i$ e $\Delta v_j = v_{j+1} - v_j$, utilizzando queste due variabili
-possiamo scrivere $\mathbf{X}^{(i,j)}(s,t) = \mathbf{H}^T(s)\ \mathbf{C}(i,j)) \ \mathbf{H}(t).$
-Per imporre le 16 condizioni di interpolazione sugli estremi del sotto-rettangolo in cui risulta definita $\mathbf{X}^{(i,j)}$, si pone allora
+con $\Delta u_i = u_{i+1} - u_i$ e $\Delta u_i = u_{i+1} - u_i$, utilizzando queste due variabili
+possiamo scrivere $\mathbf{X^{(i,j)}}(s,t = \mathbf{H}^T(s)\ \mathbf{C}(i,j)) \ \mathbf{H}(t).$
+Per imporre le 4 x 4 condizioni di interpolazione sugli estremi del sotto-rettangolo in cui risulta definita $\mathbf{X}^{(i,j)}$, si pone allora
 
 $$\mathbf{C}^{(i,j)} = 
 \begin{pmatrix}
@@ -384,12 +410,12 @@ $$\mathbf{C}^{(i,j)} =
 \end{pmatrix}  $$
 Nel Codice~\ref{matrixSpline} viene descritta la funzione \MATLAB per definire la matrice della forma di Hermite
 nel caso spline.
-\lstinputlisting[caption={Creazione matrice della forma di Hermite nel caso spline}, style=matlab, label={matrixSpline}, captionpos=b]{../hermite_matrix_spine.m}
+\lstinputlisting[caption={Matrice della forma di Hermite caso spline}, style=matlab, label={matrixSpline}, captionpos=b]{../hermite_matrix_spine.m}
 
-Dividiamo il dominio parametrico di $u$ in tre parti, $[0, \ 0.5, \ 0.9, \ 1]$. 
+Dividiamo il dominio parametrico di $u$ in tre parti, $[0 \ 0.5 \ 0.9 \ 1]$. 
 Nella Figura~\ref{fig:6} vediamo come l'unione dei patch formi la superficie di partenza.
-Notiamo che il patch (in blu) definito nel dominio $u_1 = [0, \ 0.5]$ è quello più grossolano
-mentre il patch (in giallo) definito nel dominio $u_3 = [0.9, \ 1]$ è quello più fitto.
+Notiamo che il patch (in blu) definito nel dominio $u_1 = [0 \ 0.5]$ è quello più grossolano
+mentre il patch (in giallo) definito nel dominio $u_3 = [0.9 \ 1]$ è quello più fitto.
 
 \begin{figure}[H]
     \centering
@@ -398,8 +424,8 @@ mentre il patch (in giallo) definito nel dominio $u_3 = [0.9, \ 1]$ è quello pi
 
     \caption{Patch spline}\label{fig:6}
 \end{figure}
-Usando tutto il dominio parametrico della superficie e dividendolo in 16 parti 
-(dominio di $u$ e di $v$ diviso in 4 parti), vediamo in
+
+Usando tutto il dominio parametrico della superficie e dividendolo in 16 parti, vediamo in
 Figura~\ref{fig:7} tutta la superficie definita dall'unione di 16 patch in forma di Hermite.
 \begin{figure}[H]
     \centering
@@ -409,36 +435,35 @@ Figura~\ref{fig:7} tutta la superficie definita dall'unione di 16 patch in forma
     \caption{Superficie intera }\label{fig:7}
 \end{figure}
 
-\section{Errore di interpolazione nel caso spline}\label{sec:erroriSpline}
+\section{Errore di interpolazione caso spline}\label{sec:erroriSpline}
 Prendendo il patch nel dominio parametrico $[0, 1]^2$ nel caso base ($n = 1$ e $m = 1$)
-abbiamo ovviamente gli stessi valori di errore che abbiamo trovato nella Sessione~\ref{sec:errori}:
+abbiamo ovviamente gli stessi valori di errore:
 \begin{itemize}[-]
-	\item 0.0717 per le ascisse;
-	\item 0.0396 per le ordinate;
-	\item 0.0114 per la quota.
+	\item per x: 0.0717;
+	\item per y: 0.0396;
+	\item per z: 0.0114;
 \end{itemize}
-Dividendo il dominio in due parti su $u$ ($n = 2$ e $m = 1$) abbiamo i seguenti valori di errore:
+Dividendo il dominio in due parti il dominio su $u$ ($n = 2$ e $m = 1$) abbiamo i seguenti valori:
 \begin{itemize}[-]
-	\item 0.0201 per le ascisse;
-	\item 0.0114 per le ordinate;
-	\item 0.0114 per la quota.
+	\item per x: 0.0201;
+	\item per y: 0.0114;
+	\item per z: 0.0114;
 \end{itemize}
 Dividendo il dominio anche su $v$ ($n = 2$ e $m = 2$) abbiamo:
 \begin{itemize}[-]
-	\item 0.0113 per le ascisse;
-	\item 0.0136 per le ordinate;
-	\item 6.9577e-04 per la quota.
+	\item per x: 0.0113;
+	\item per y: 0.0136;
+	\item per z: 6.9577e-04;
 \end{itemize}
 
-Dividendo ulteriormente il dominio sia su $u$ che su $v$ ($n = 3$ e $m = 3$) abbiamo i valori di errore:
+Dividendo ulteriormente il dominio sia su $u$ che su $v$ ($n = 3$ e $m = 3$) abbiamo:
 \begin{itemize}[-]
-	\item 0.0054 per le ascisse;
-	\item 0.0075 per le ordinate;
-	\item 1.3694e-04 per la quota.
+	\item per x: 0.0054;
+	\item per y: 0.0075;
+	\item per z: 1.3694e-04;
 \end{itemize}
-Vediamo come l'errore sia diminuito di almeno un ordine di grandezza utilizzando al posto di un solo patch,
-9 sottopatch definiti nei sottointervalli del dominio parametrico.
-Nel Codice~\ref{patchnm9} troviamo lo script \MATLAB per il calcolo nell'errore.
+Nell'ultimo caso abbiamo diviso la superficie in 9 sottopatch. 
+Nel Codice~\ref{patchnm9} troviamo lo script \MATLAB per il calcolo nell'errore
 
 \begin{figure}[H]
     \centering
@@ -448,7 +473,7 @@ Nel Codice~\ref{patchnm9} troviamo lo script \MATLAB per il calcolo nell'errore.
     \caption{Superficie unione di 9 patch }\label{fig:8}
 \end{figure}
 \newpage
-\begin{lstlisting}[caption={Calcolo dell'errore interpolazione caso spline}, style=matlab, label={patchnm9}, captionpos=b]
+\begin{lstlisting}[caption={Errore interpolazione caso spline}, style=matlab, label={patchnm9}, captionpos=b]
 	n = 3; m = 3;
 	indexes_i = linspace(1, n, n);
 	indexes_j = linspace(1, m, m);
@@ -484,5 +509,4 @@ Nel Codice~\ref{patchnm9} troviamo lo script \MATLAB per il calcolo nell'errore.
 	mean(Y_norms)
 	mean(Z_norms)
 \end{lstlisting}
-
 \end{document}\documentclass[12pt]{article}

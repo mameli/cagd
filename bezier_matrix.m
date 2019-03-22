@@ -1,4 +1,3 @@
-
 function M = bezier_matrix(C)
     M = zeros(4, 4);
 
